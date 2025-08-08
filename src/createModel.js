@@ -1,4 +1,4 @@
-import * as THREE from "./three-js.min/three.module.min.js"
+import * as THREE from "./three-js/three.module.min.js"
 import { MODELS, texture } from "./const.js"
 
 const getMaterial = ({ width, height, uv, isBottom = false }) => {

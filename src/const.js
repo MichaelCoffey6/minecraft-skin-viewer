@@ -1,4 +1,4 @@
-import * as THREE from "./three-js.min/three.module.min.js"
+import * as THREE from "./three-js/three.module.min.js"
 import { getJSON } from "./utils.js"
 import { getBoneAndStruct } from "./createModel.js"
 
@@ -26,6 +26,8 @@ export const {
   viewer,
   config,
   canvas,
+  skinParts,
+  titleImg,
   selectSkinType, 
   animationChk, 
   bodyPartsChk,

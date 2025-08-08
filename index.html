@@ -219,41 +219,7 @@
     }
   </script>
   <script> const cl = (...log) => console.log(...log) </script>
-  <script type="module">
-    import "./app.js"
-    import { viewer, config, camera, renderer } from "./src/const.js"
-    import { onConfigBtnClick, onSkinPartClick } from "./src/onBtnClick.js"
-    
-    const onWindowResize = () => {
-      if (canvas.width >= viewer.clientWidth) {
-        canvas.style.width = `${viewer.clientWidth}px`
-        canvas.style.height = ""
-      } else if (canvas.height >= viewer.clientHeight) {
-        canvas.style.width = ""
-        canvas.style.height = `${viewer.clientHeight}px`
-      } else if (viewer.clientWidth <= 250 / 400 * viewer.clientHeight) {
-        canvas.style.width = "100%"
-        canvas.style.height = ""
-      } else if (viewer.clientHeight <= viewer.clientWidth / 250 * 400) {
-        canvas.style.width = ""
-        canvas.style.height = "100%"
-      }
-    }
-    
-    config.addEventListener('click', onConfigBtnClick)
-    skinParts.addEventListener('click', onSkinPartClick)
-    
-    await Promise.all([
-      document.fonts.ready,
-      titleImg.decode()
-    ])
-    
-    onWindowResize()
-    canvas.style.opacity = 1
-    
-    window.addEventListener('resize', onWindowResize)
-  </script>
-  
+  <script type="module" src="./app.js"></script>
 </head>
 <body>
   <div id="app">
