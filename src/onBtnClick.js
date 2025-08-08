@@ -16,8 +16,6 @@ export const onSkinPartClick = async ({ target }) => {
   const isInvisible = target.classList.contains('invisible')
   const partName = target.id.replace(/Path$/, '')
   const isClote = target.classList.contains('clotes')
-  const clickAudio = new Audio('./assets/clickAudio.mp3')
-  clickAudio.oncanplaythrough = () => clickAudio.play()
 
   if (isClote && bodyPartsChk.checked) {
     const { bodyPart: bodyPartName } = target.dataset
@@ -26,6 +24,9 @@ export const onSkinPartClick = async ({ target }) => {
     
     return
   }
+  
+  const clickAudio = new Audio('./assets/clickAudio.mp3')
+  clickAudio.oncanplaythrough = () => clickAudio.play()
   
   MODEL_BONES[partName].visible = isInvisible
 
