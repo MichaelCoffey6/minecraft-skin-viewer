@@ -25,7 +25,7 @@ const requestListener = async (req, res) => {
   
   try {
     const content = await fs.readFile(filePath)
-    res.writeHead(200, { "Content-Type": contentType })
+    res.writeHead(200, { 'Content-Type': contentType })
     res.end(content)
   } catch (err) {
     if (err.code === 'ENOENT') {
