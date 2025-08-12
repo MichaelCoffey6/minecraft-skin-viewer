@@ -10,7 +10,6 @@ const contentTypes = {
   png: "image/png",
   jpg: "image/jpg",
   svg: "image/xml+svg",
-  ttf: "font/ttf",
   woff2: "font/woff2",
   mp3: "audio/mp3"
 }
@@ -39,7 +38,6 @@ const requestListener = async (req, res) => {
   }
 }
 
-const service = "onrender.com"
 const port = process.env.PORT ?? 4000 
 const server = http.createServer(requestListener)
 

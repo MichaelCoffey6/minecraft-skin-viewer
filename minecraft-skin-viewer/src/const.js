@@ -56,7 +56,7 @@ export const texture = new THREE.Texture(skinImg)
 export const scene = new THREE.Scene()
 export const camera = new THREE.PerspectiveCamera(75, 250 / 400, 0.1, 1000)
 export const renderer = new THREE.WebGLRenderer({ alpha: true, canvas })
-export const defaultSkin = await import.meta.resolve('@/assets/Coffey64.png')
+export const defaultSkin = await import.meta.resolve('@/assets/Coffey.png')
 export const importationType = { with: { type: 'json' } }
 export const MODELS = await getJSON('@/src/geometry.json')
 
