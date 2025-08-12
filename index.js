@@ -18,8 +18,8 @@ const contentTypes = {
 const requestListener = async (req, res) => {
   const { url } = req
   const filePath = `.${url}` === "./"
-    ? "./my-skin-viewer/index.html"
-    : `./my-skin-viewer/${url}`
+    ? "./minecraft-skin-viewer/index.html"
+    : `./minecraft-skin-viewer/${url}`
   
   const extname = path.extname(filePath).slice(1)
   const contentType = contentTypes[extname]
@@ -39,7 +39,7 @@ const requestListener = async (req, res) => {
   }
 }
 
-const port = 3000
+const port = prosses.env ?? 3000
 const server = http.createServer(requestListener)
 
 server.listen(port, () => {
