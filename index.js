@@ -17,7 +17,6 @@ const contentTypes = {
 
 const requestListener = async (req, res) => {
   const { url } = req
-  console.log(await fs.readdir(`./`))
   const filePath = `.${url}` === "./"
     ? `./minecraft-skin-viewer/index.html`
     : `./minecraft-skin-viewer/${url}`
