@@ -17,9 +17,10 @@ const contentTypes = {
 
 const requestListener = async (req, res) => {
   const { url } = req
+  console.log();
   const filePath = `.${url}` === "./"
-    ? `./minecraft-skin-viewer.${service}/index.html`
-    : `./minecraft-skin-viewer.${service}/${url}`
+    ? `./minecraft-skin-viewer/index.html`
+    : `./minecraft-skin-viewer/${url}`
   
   const extname = path.extname(filePath).slice(1)
   const contentType = contentTypes[extname]
