@@ -1,0 +1,32 @@
+<canvas id="canvas"></canvas>
+<img src="dirt.png" id="dirt" />
+<img src="grass.png" id="ggrass" />
+<img src="poster-text.png" id="poster" />
+<a id="a" hidden></a>
+
+<script type="module" charset="utf-8">
+  const ctx = canvas.getContext('2d')
+  await Promise.all([
+    dirt.decode(),
+    grass.decode(),
+    poster.decode(),
+  ])
+  
+  const width = canvas.width = poster.width
+  const height = canvas.height = poster.height
+  
+  for (let i = 0; i < Math.ceil(width / dirt.width); i++)
+    for (let j = 0; j < Math.ceil(width / dirt.width); j++) {
+      ctx.drawImage(dirt, i * dirt.width, j * dirt.width)
+    }
+  
+  for (let i = 0; i < Math.ceil(width / dirt.width); i++) {
+    ctx.drawImage(grass, i * dirt.width, j * dirt.width)
+  }
+  
+  ctx.drawImage(poster, 0, 0)
+  
+  a.href = canvas.toDataURL()
+  a.download = 'poster.png'
+  a.click()
+</script>
