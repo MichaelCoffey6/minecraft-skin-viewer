@@ -1,0 +1,136 @@
+<svg id="skinParts" viewbox="-0.5 -0.5 37 69" xmlns="http://www.w3.org/2000/svg">
+  <path id="headPath" d="M12,3 24,3 24,15 12,15z" />
+  <path id="bodyPath" d="M12,21 24,21 24,40 12,40z" />
+  <path id="rightArmPath" d="M3,21 6,21 6,40 3,40z" />
+  <path id="leftArmPath" d="M30,21 33,21 33,40 30,40z" />
+  <path id="rightLegPath" d="M12,46 15,46 15,65 12,65z" />
+  <path id="leftLegPath" d="M21,46 24,46 24,65 21,65z" />
+  
+  <path id="hatPath" class="clotes" data-body-part="headPath" d="M10,1 26,1 26,17 10,17z" />
+  <path id="jacketPath" class="clotes" data-body-part="bodyPath" d="M10,19 26,19 26,42 10,42z" />
+  <path id="rightSleevePath" class="clotes" data-body-part="rightArmPath" d="M1,19 8,19 8,42 1,42z" />
+  <path id="leftSleevePath" class="clotes" data-body-part="leftArmPath" d="M28,19 35,19 35,42 28,42z" />
+  <path id="rightPantsPath" class="clotes" data-body-part="rightLegPath" d="M10,44 17,44 17,67 10,67z" />
+  <path id="leftPantsPath" class="clotes" data-body-part="leftLegPath" d="M19,44 26,44 26,67 19,67z" />
+  
+  <style>
+    #skinParts path {
+      stroke: #444;
+      fill: #444;
+    }
+    
+    #skinParts .clotes {
+      fill: transparent;
+    }
+  </style>
+</svg>
+
+<style>
+  @font-face {
+    font-family: "Minecraft";
+    src: url('./my-skin-viewer/assets/Mojangles.ttf');
+  }
+  
+  html {
+    background-image: url('./my-skin-viewer/assets/stone.png');
+    background-size: 70px;
+    image-rendering: pixelated;
+  }
+  
+  .button { 
+    font-family: Minecraft;
+    display: inline-block; 
+    background: #888; 
+    padding: 1px 3px; 
+    margin: 2px; 
+    border: 2px outset #ccc; 
+    color: white; 
+    text-shadow: black 1px 1px; 
+    text-decoration: none; 
+  }
+	
+	.button:active, .button:focus,
+	input[name=skinParts]:checked + button { 
+	  color: #ddd; 
+	  background: #999; 
+	  border: 2px inset #bbb;
+	}
+</style>
+
+
+<label for="bodyParts">
+  <input type="radio" name="skinParts" id="bodyParts" value="" checked hidden />
+  <button class="button">bodyParts</button>
+</label>
+
+
+<label for="clotesParts">
+  <input type="radio" name="skinParts" id="clotesParts" value="" hidden />
+  <button class="button">clotesParts</button>
+</label>
+
+<script>
+  const clotes = document.querySelectorAll("path")
+  const btns = document.querySelectorAll('label button')
+  const clickAudio = new Audio()
+  clickAudio.src = "./my-skin-viewer/assets/clickAudio.mp3"
+  
+  btns.forEach((btn, i) => btn.addEventListener('click', ({ target }) => {
+    const inp = target.previousElementSibling
+    
+    if (!inp.checked) {
+      clickAudio.play()
+      inp.click()
+      return 
+    }
+    
+    const otherIndex = Math.abs(i - 1)
+    const otherBtn = btns[otherIndex]
+    otherBtn.click()
+    btn.blur()
+  }))
+  
+  clotes.forEach(clote => clote.addEventListener("click", ({ target }) => {
+    const isClote = target.classList.contains('clotes')
+    
+    if (isClote && bodyParts.checked) {
+      const { bodyPart: partName } = target.dataset
+      const { [partName]: bodyPart } = window
+      bodyPart.dispatchEvent(new Event('click'))
+      
+      return
+    }
+    
+    clickAudio.play()
+    
+    if (target.classList.contains('invisible')) {
+      target.classList.remove('invisible')
+      
+      if (clotesParts.checked && isClote) {
+        target.style.stroke = ""
+        return
+      }
+      
+      if (bodyParts.checked && !isClote) {
+        target.style.stroke = ""
+        target.style.fill = ""
+        return
+      }
+      
+      return
+    } 
+    
+    target.classList.add('invisible')
+    
+    if (clotesParts.checked && isClote) {
+      target.style.stroke = "#bbb"
+      return
+    }
+    
+    if (bodyParts.checked && !isClote) {
+      target.style.stroke = "#bbb"
+      target.style.fill = "#bbb"
+      return
+    }
+  }))
+</script>

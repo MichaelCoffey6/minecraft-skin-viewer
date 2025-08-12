@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skin Viewer</title>
+  <style>
+    @font-face {
+      font-family: Minecraft;
+      src: url('./assets/Mojangles.woff2')
+    }
+    
+    * {
+      box-sizing: border-box;
+      font-family: Minecraft, Monospace;
+      font-size: 18px;
+    }
+    
+    html, body, #app {
+      width: 100vw;
+      height: 100dvh;
+      max-height: 100dvh;
+      margin: 0;
+      padding: 0;
+      align-items: center;
+      background-image: url('./assets/grass.png'), url('./assets/dirt.png');
+      background-size: 100px 100px;
+      background-repeat: repeat-x, repeat;
+      image-rendering: pixelated
+    }
+    
+    #app {
+      opacity: 0;
+      padding: 10px;
+      display: grid;
+      align-items: center;
+      justify-content: center;
+      grid-template-rows: 1fr auto auto 1fr;
+      grid-template-columns: 1fr;
+      grid-template-areas: '.' 'header' 'main' '.';
+    }
+    
+    #title {
+      grid-area: header;
+      height: 100%;
+      width: calc(100% - 0px);
+      text-align: center;
+      align-content: end;
+    }
+    
+    #titleImg {
+      max-width: 400px;
+      width: 100%;
+      object-fit: contain;
+    }
+    
+    main {
+      grid-area: main;
+      overflow: hidden;
+      width: 100%;
+      max-width: 900px;
+      max-height: 700px;
+      height: 100%;
+      background-color: #c6c6c6;
+      padding: 10px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-content: start;
+      align-items: start;
+      justify-content: center;
+      border-top: 4px solid white;
+      border-left: 4px solid white;
+      border-right: 4px solid #555;
+      border-bottom: 4px solid #555;
+      border-radius: 4px;
+    }
+    
+    #viewer {
+      width: 100%;
+      height: calc(50% - 5px);
+      max-height: calc(50% - 5px);
+      object-fit: contain;
+      overflow: hidden;
+      border-top: 4px solid #555;
+      border-left: 4px solid #555;
+      border-right: 4px solid white;
+      border-bottom: 4px solid white;
+      border-radius: 4px;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      flex-wrap: wrap;
+      padding: 0;
+      background-image: url('./assets/stone.png');
+      background-size: 100px 100px;
+      image-rendering: pixelated;
+    }
+    
+    #config {
+      width: 100%;
+      height: calc(50% - 5px);
+      max-height: calc(50% - 5px);
+      display: grid;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(5, auto) 1fr;
+      grid-template-areas: 
+        'loadSkinBtn loadSkinBtn' 
+        'bodyPartsBtn skinPartsBtn'
+        'clotesPartsBtn skinPartsBtn'
+        'animationBtn skinPartsBtn'
+        'audioBtn skinPartsBtn'
+        '. skinPartsBtn'
+    }
+    
+    #loadSkinBtn {
+      grid-area: loadSkinBtn;
+    }
+    
+    #bodyPartsBtn {
+      grid-area: bodyPartsBtn;
+    }
+    
+    #clotesPartsBtn {
+      grid-area: clotesPartsBtn;
+    }
+    
+    #skinPartsBtn {
+      grid-area: skinPartsBtn;
+      width: 100%;
+      height: 100%;
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+      display: grid;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    #animationBtn {
+      grid-area: animationBtn;
+    }
+    
+    #audioBtn {
+      grid-area: audioBtn;
+    }
+    
+    #loadSkinBtn button {
+      width: 100%;
+    }
+    
+    .configBtn label { 
+      width: 100%;
+      background-color: #6f6f6f; 
+      padding: 3px; 
+      border: 3px outset #aaa; 
+      color: white; 
+      text-shadow: black 1px 1px; 
+      display: inline-block;
+      text-align: center;
+      align-content: center;
+      user-select: none;
+    }
+  	
+  	.configBtn label.focus,
+  	input[name="skinPartsChk"]:checked + label { 
+  	  color: #c6c6c6; 
+  	  background-color: #8b8b8b; 
+  	  border: 3px inset #aaa;
+  	}
+    
+    #animationBtn label::after,
+    #audioBtn label::after {
+      content: 'OFF';
+    }
+    
+    #animationChk:checked + label::after,
+    #audioChk:checked + label::after {
+      content: 'ON';
+    }
+    
+    #canvas {
+      object-fit: contain;
+    }
+    
+    #skinParts {
+      display: grid;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    
+    #selectSkinType {
+      width: 100%;
+      max-width: 400px;
+      background-color: #c6c6c6;
+      padding: 5px;
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      border-top: 4px solid white;
+      border-left: 4px solid white;
+      border-right: 4px solid #555;
+      border-bottom: 4px solid #555;
+      border-radius: 4px;
+      display: none;
+      gap: 5px;
+      grid-template-areas: 'selectSkinTypeHeader' 'skinTypesCont';
+    }
+    
+    #selectSkinType header {
+      padding: 0;
+      text-align: center;
+      grid-area: selectSkinTypeHeader;
+    }
+    
+    .selectSkinTxt {
+      color: #fff;
+    }
+    
+    .selectSkinCont {
+      padding: 7px 12px;
+      background-color: #000;
+      border-top: 2px solid #555;
+      border-left: 2px solid #555;
+      border-right: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      display: grid;
+      gap: 10px;
+      grid-template-rows: auto auto;
+      grid-template-areas: 'selectSkinTypeTxt' 'skinTypesBtns';
+    }
+    
+    #selectSkinType.invalid #skinTypesCont {
+      display: none;
+    }
+    
+    #selectSkinType.invalid #invalidSkinCont {
+      display: grid;
+    }
+    
+    #invalidSkinCont {
+      display: none;
+      padding-bottom: 20px;
+    }
+    
+    .selectSkinBtns {
+      display: grid;
+      gap: 15px;
+      justify-content: center;
+      align-items: end;
+      height: 200px;
+      grid-area: skinTypesBtns;
+    }
+    
+    #invalidSkinCont button {
+      padding: 15px;
+      width: 150px;
+    }
+    
+    #skinTypesBtns {
+      grid-template-areas: '. .';
+      grid-template-columns: repeat(2, calc(50% - 7.5px));
+      grid-template-rows: auto;
+    }
+    
+    #skinTypesBtns button {
+      height: 200px;
+    }
+    
+    .selectSkinBtns button {
+      background-color: #c6c6c6;
+      padding: 5px 10px;
+      border-top: 2px solid white;
+      border-left: 2px solid white;
+      border-right: 2px solid #555;
+      border-bottom: 2px solid #555;
+      display: inline-block;
+    }
+    
+    #classicPreview, #slimPreview {
+      pointer-events: none;
+      height: 100%;
+      display: inline-block;
+    }
+    
+    @media (width > 590px) {
+      #viewer, #config {
+        width: calc(50% - 5px);
+        height: 100%;
+        max-height: 100%;
+      }
+      
+      #config {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto auto auto 1fr;
+        grid-template-areas: 
+          'loadSkinBtn loadSkinBtn' 
+          'bodyPartsBtn clotesPartsBtn'
+          'animationBtn animationBtn'
+          'audioBtn audioBtn'
+          'skinPartsBtn skinPartsBtn'
+      }
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "@/": "./"
+      }
+    }
+  </script>
+  <script> const cl = (...log) => console.log(...log) </script>
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <div id="app">
+    <article id="selectSkinType" hidden>
+      <header>
+        SKIN TYPE
+      </header>
+      
+      <div id="invalidSkinCont" class="selectSkinCont">
+        <span class="selectSkinTxt">
+          Please import a .png file of dimensions 64x64 or 128x128
+        </span>
+        
+        <div class="selectSkinBtns">
+          <button id="closeSkinSelector">OK</button>
+        </div>
+      </div>
+      
+      <div id="skinTypesCont" class="selectSkinCont">
+        <span id="selectSkinTypeTxt" class="selectSkinTxt">
+          Choose the correct model type for your skin
+        </span>
+        
+        <div id="skinTypesBtns" class="selectSkinBtns">
+          <button id="selectSlimSkin" value="slim">
+            <canvas width="32" height="64" id="slimPreview" data-skin-type="slim"></canvas>
+          </button>
+          
+          <button id="selectClassicSkin" value="classic">
+            <canvas width="32" height="64" id="classicPreview" data-skin-type="classic"></canvas>
+          </button>
+        </div>
+      </div>
+    </article>
+  
+    <header id="title">
+      <img src="./assets/title.png" alt="Minecraft Skin Editor logo" id="titleImg" />
+    </header>
+    
+    <main id="main">
+      <section id="viewer">
+        <canvas id="canvas" width="250" height="400"></canvas>
+      </section>
+      
+      <section id="config">
+        <article id="loadSkinBtn" class="configBtn">
+          <input id="loadSkinInp" name="skinPartsChk" type="file" accept="image/*" hidden />
+          <label for="loadSkinInp">Load Skin</label>
+        </article>
+        
+        <article id="bodyPartsBtn" class="configBtn">
+          <input id="bodyPartsChk" name="skinPartsChk" type="radio" checked hidden />
+          <label for="bodyPartsChk">Body Parts</label>
+        </article>
+        
+        <article id="clotesPartsBtn" class="configBtn">
+          <input id="clotesPartsChk" name="skinPartsChk" type="radio" hidden />
+          <label for="clotesPartsChk">Clotes Parts</label>
+        </article>
+        
+        <article id="animationBtn" class="configBtn">
+          <input id="animationChk" type="checkbox" checked hidden />
+          <label for="animationChk">Animation: </label>
+        </article>
+        
+        <article id="audioBtn" class="configBtn">
+          <input id="audioChk" type="checkbox" checked hidden />
+          <label for="audioChk">Audio: </label>
+        </article>
+        
+        <article id="skinPartsBtn" class="configBtn">
+          <svg id="skinParts" viewbox="-0.5 -0.5 37 69" xmlns="http://www.w3.org/2000/svg">
+            <path id="headPath" d="M12,3 24,3 24,15 12,15z" />
+            <path id="bodyPath" d="M12,21 24,21 24,40 12,40z" />
+            <path id="rightArmPath" d="M3,21 6,21 6,40 3,40z" />
+            <path id="leftArmPath" d="M30,21 33,21 33,40 30,40z" />
+            <path id="rightLegPath" d="M12,46 15,46 15,65 12,65z" />
+            <path id="leftLegPath" d="M21,46 24,46 24,65 21,65z" />
+            
+            <path id="hatPath" class="clotes" data-body-part="headPath" d="M10,1 26,1 26,17 10,17z" />
+            <path id="jacketPath" class="clotes" data-body-part="bodyPath" d="M10,19 26,19 26,42 10,42z" />
+            <path id="rightSleevePath" class="clotes" data-body-part="rightArmPath" d="M1,19 8,19 8,42 1,42z" />
+            <path id="leftSleevePath" class="clotes" data-body-part="leftArmPath" d="M28,19 35,19 35,42 28,42z" />
+            <path id="rightPantsPath" class="clotes" data-body-part="rightLegPath" d="M10,44 17,44 17,67 10,67z" />
+            <path id="leftPantsPath" class="clotes" data-body-part="leftLegPath" d="M19,44 26,44 26,67 19,67z" />
+            
+            <style>
+              svg path {
+                stroke: #555;
+                fill: #555;
+              }
+              
+              svg .clotes {
+                fill: transparent;
+              }
+              
+              svg path.invisible:not(.clotes) {
+                stroke: #aaa;
+                fill: #aaa
+              }
+              
+              svg path.invisible.clotes {
+                stroke: #aaa;
+              }
+            </style>
+          </svg>
+        </article>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
