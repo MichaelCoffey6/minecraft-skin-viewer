@@ -39,7 +39,7 @@ const requestListener = async (req, res) => {
   }
 }
 
-const port = prosses.env ?? 3000
+const port = process.env.PORT || 4000 
 const server = http.createServer(requestListener)
 
 server.listen(port, () => {
