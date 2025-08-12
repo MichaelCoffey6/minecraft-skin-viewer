@@ -18,8 +18,8 @@ const contentTypes = {
 const requestListener = async (req, res) => {
   const { url } = req
   const filePath = `.${url}` === "./"
-    ? "./minecraft-skin-viewer/index.html"
-    : `./minecraft-skin-viewer/${url}`
+    ? `./minecraft-skin-viewer.${service}/index.html`
+    : `./minecraft-skin-viewer.${service}/${url}`
   
   const extname = path.extname(filePath).slice(1)
   const contentType = contentTypes[extname]
@@ -39,6 +39,7 @@ const requestListener = async (req, res) => {
   }
 }
 
+const service = "onrender.com"
 const port = process.env.PORT ?? 4000 
 const server = http.createServer(requestListener)
 
