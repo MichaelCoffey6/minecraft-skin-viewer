@@ -3,6 +3,11 @@
 <head>
   <meta http-equiv="content-type" content="text/html charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A simple minecraft skin viewer make with threejs and minecraft geometry.json." />
+  <meta property="og:descriprion" content="A simple minecraft web skin viewer." />
+  <meta property="og:image" content="./assets/poster.png" />
+  <meta property="og:image:alt" content="Minecraft Skin Viewer poster" />
+  <meta property="og:title" content="Minecraft Skin Viewer" />
   <title>Minecraft Skin Viewer</title>
   <link rel="shortcut icon" href="./assets/icon.png" type="image/png" />
   <style>
@@ -223,6 +228,8 @@
     
     .selectSkinTxt {
       color: #fff;
+      padding: 0;
+      margin: 0;
     }
     
     .selectSkinCont {
@@ -328,9 +335,9 @@
       </header>
       
       <div id="invalidSkinCont" class="selectSkinCont">
-        <span class="selectSkinTxt">
+        <p class="selectSkinTxt">
           Please import a .png file of dimensions 64x64 or 128x128
-        </span>
+        </p>
         
         <div class="selectSkinBtns">
           <button id="closeSkinSelector">OK</button>
@@ -338,9 +345,9 @@
       </div>
       
       <div id="skinTypesCont" class="selectSkinCont">
-        <span id="selectSkinTypeTxt" class="selectSkinTxt">
+        <p id="selectSkinTypeTxt" class="selectSkinTxt">
           Choose the correct model type for your skin
-        </span>
+        </p>
         
         <div id="skinTypesBtns" class="selectSkinBtns">
           <button id="selectSlimSkin" value="slim">
