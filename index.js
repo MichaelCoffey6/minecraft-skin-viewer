@@ -9,7 +9,7 @@ const contentTypes = {
   json: "application/json",
   png: "image/png",
   jpg: "image/jpg",
-  svg: "image/xml+svg",
+  svg: "image/svg+xml",
   woff2: "font/woff2",
   mp3: "audio/mp3"
 }
