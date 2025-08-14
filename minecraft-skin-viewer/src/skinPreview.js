@@ -2,7 +2,14 @@ import { BONE_NAMES, MODELS, selectClassicSkin, selectSlimSkin, closeSkinSelecto
 import { playClickAudio } from "./utils.js"
 
 let sizeMutiply = skinCanvas.width === 128 ? 2 : 1
-  
+
+export class InvalidSkin extends Error {
+  constructor (message) {
+    super()
+    this.message = `The skin import was rejected. Reason: ${message}`;
+  }
+}
+
 export const setPreview = () => {
   sizeMutiply = skinCanvas.width === 128 ? 2 : 1
   
@@ -50,21 +57,27 @@ export const setPreview = () => {
   }
 }
 
-export const setSkinSelectorOpts = () => new Promise((res, rej) => {
+export const setSkinSelectorOpts = invalidSkinMsg => {
+  const { promise, resolve, reject } = Promise.withResolvers()
+  
   selectClassicSkin.onclick = selectSlimSkin.onclick = ({ target }) => {
     playClickAudio()
-    res(target.value)
+    resolve(target.value)
   }
   
   closeSkinSelector.onclick = () => {
     playClickAudio()
-    rej()
+    reject(new InvalidSkin(invalidSkinMsg))
   }
   
-  setTimeout(rej, 10000)
-})
+  setTimeout(() => {
+    reject(new InvalidSkin('Time exceeded.'))
+  }, 10000)
+  
+  return promise
+}
 
-export const openInvalidSkin = async () => {
+export const openInvalidSkin = async invalidSkinMsg => {
   selectSkinType.classList.add('invalid')
-  await setSkinSelectorOpts()
+  await setSkinSelectorOpts(invalidSkinMsg)
 }

@@ -215,9 +215,14 @@ input[name="skinPartsChk"]:checked + label {
 #selectSkinType header {
   padding: 0;
   text-align: center;
-  font-family: MinecraftTen;
   color: #4c4c4c;
   grid-area: selectSkinTypeHeader;
+}
+
+#selectSkinType header h2 {
+  font-family: MinecraftTen, Minecraft, Monospace;
+  margin: 0;
+  padding: 0;
 }
 
 .selectSkinTxt {

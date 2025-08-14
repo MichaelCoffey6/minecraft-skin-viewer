@@ -1,6 +1,6 @@
 import { MODELS, MODEL_BONES, ARM_NAMES, selectSkinType, reader, skinImg, loadSkinInp, skinCanvas, skinCtx } from "./const.js"
 import { getBoneAndStruct } from "./createModel.js"
-import { setPreview, setSkinSelectorOpts, openInvalidSkin } from "./skinPreview.js"
+import { InvalidSkin, setPreview, setSkinSelectorOpts, openInvalidSkin } from "./skinPreview.js"
 import { saveData, pageConfig } from "./saveData.js"
 
 export const loadFile = () => {
@@ -31,7 +31,8 @@ export const loadImage = async () => {
   selectSkinType.style.display = "grid"
   
   try {
-    if (!src.startsWith('data:image/png')) await openInvalidSkin()
+    if (!src.startsWith('data:image/png'))
+      await openInvalidSkin('Image format.')
     
     skinImg.src = src
     await skinImg.decode()
@@ -54,8 +55,11 @@ export const loadImage = async () => {
       window.pageConfig.skinImgSrc = src
       loadSkin(skinType)
       saveData()
-    } else await openInvalidSkin()
-  } catch (e) { cl(e) }
+    } else await openInvalidSkin('Image size.')
+  } catch (err) {
+    if (err instanceof InvalidSkin) cl(err)
+    else throw err
+  }
   
   selectSkinType.classList.remove('invalid')
   selectSkinType.style.display = ""

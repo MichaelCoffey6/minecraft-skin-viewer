@@ -30,7 +30,7 @@ const requestListener = async (req, res) => {
   } catch (err) {
     if (err.code === 'ENOENT') {
       res.writeHead(404)
-      res.end('404 Not Found')
+      res.end(`404 Not Found ${JSON.stringify(err)}`)
     } else {
       res.writeHead(500)
       res.end('Error interno del servidor')

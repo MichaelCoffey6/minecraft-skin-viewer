@@ -1,6 +1,7 @@
 import { BONE_NAMES, MODELS, loadSkinInp, configBtns, skinImg, defaultSkin } from "./const.js"
 import { loadVariables } from "./utils.js"
 
+const pageConfigObjName = "pageConfig"
 const dataName = "minecraft-skin-viewer-config-michael-coffey"
 const pageConfigStr = localStorage.getItem(dataName)
 
@@ -10,34 +11,32 @@ export const saveData = () => {
 }
 
 export const pageConfig = loadVariables.then(() => {
-  if ('pageConfig' in window) {
-    return window.pageConfig
+  if (pageConfigObjName in window) {
+    return window[pageConfigObjName]
   }
   
   if (pageConfigStr != null) {
-    window.pageConfig = JSON.parse(pageConfigStr)
-    return window.pageConfig
+    window[pageConfigObjName] = JSON.parse(pageConfigStr)
+    return window[pageConfigObjName]
   }
   
-  window.pageConfig = Object.fromEntries(
-    configBtns.map(configBtn => {
-      const { id, checked } = configBtn
-      
-      if (configBtn === loadSkinInp) {
-        return [ 'skinImgSrc', defaultSkin ]
-      }
-      
-      return [ id, checked ]
-    }).concat([[
-      'bones',
-      Object.assign(
-        Object.fromEntries(BONE_NAMES.map(boneName => {
-          return [ boneName, true ]
-        })),
-        { skinType: 'classic' }
-      )
-    ]])
-  )
+  window[pageConfigObjName] = {
+    skinImgSrc: defaultSkin,
+    bones: {
+      skinType: 'classic'
+    }
+  }
   
-  return window.pageConfig
+  configBtns.forEach(configBtn => {
+    if (configBtn === loadSkinInp) return
+    
+    const { id, checked } = configBtn
+    window[pageConfigObjName][id] = checked
+  })
+  
+  BONE_NAMES.forEach(boneName => {
+    window[pageConfigObjName].bones[boneName] = true
+  })
+  
+  return window[pageConfigObjName]
 })
