@@ -12,6 +12,7 @@ export const loadFile = () => {
 export const loadSkin = async skinType => {
   const notSameSkinType = skinType !== window.pageConfig.bones.skinType
   window.pageConfig.bones.skinType = skinType
+  saveData()
   
   const bones = Object.entries(MODEL_BONES).map(async ([ boneName, bone ]) => {
     if (notSameSkinType && ARM_NAMES.includes(boneName)) {
@@ -54,7 +55,6 @@ export const loadImage = async () => {
       const skinType = await setSkinSelectorOpts()
       window.pageConfig.skinImgSrc = src
       loadSkin(skinType)
-      saveData()
     } else await openInvalidSkin('Image size.')
   } catch (err) {
     if (err instanceof InvalidSkin) cl(err)
