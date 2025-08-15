@@ -62,7 +62,7 @@ export const getBoneAndStruct = async (boneName, getBone = () => null) => {
   bone.name = boneName
   bone.visible = (await pageConfig).bones[boneName]
   
-  setPositionBone(bone, width, height, origin)
+  setPositionBone(bone)
 
   return { bone, geometry, materials }
 }

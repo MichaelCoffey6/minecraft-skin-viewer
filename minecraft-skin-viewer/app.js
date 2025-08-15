@@ -1,5 +1,5 @@
 import { SRGBColorSpace } from "./src/three-js/three.module.min.js"
-import { MODELS, app, defaultSkin, titleImg, camera, renderer, scene, skinModel, canvas, skinParts, viewer, config, distance, skinImg, loadSkinInp, reader } from "./src/const.js"
+import { MODELS, canvasSize, app, defaultSkin, titleImg, camera, renderer, scene, skinModel, canvas, skinParts, viewer, config, distance, skinImg, loadSkinInp, reader } from "./src/const.js"
 import { loadFile, loadImage, loadSkin } from "./src/loadSkinFile.js"
 import { onPointerDown, onTouchMove, onTouchEnd } from "./src/tactilRotation.js"
 import { onConfigBtnClick, onSkinPartClick, configBtnFocus } from "./src/onBtnClick.js"
@@ -12,10 +12,12 @@ const {
   ...configBtns 
 } = await pageConfig
 
+const { width, height } = canvasSize
+
 skinImg.src = skinImgSrc || defaultSkin
 camera.position.z = distance
 renderer.outputColorSpace = SRGBColorSpace
-renderer.setSize(250, 400)
+renderer.setSize(width, height)
 scene.add(skinModel)
 
 for (const [boneName, visible] of Object.entries(bones)) {
@@ -28,16 +30,10 @@ for (const [configBtnId, checked] of Object.entries(configBtns)) {
 }
 
 const onWindowResize = () => {
-  if (canvas.width >= viewer.clientWidth) {
-    canvas.style.width = `${viewer.clientWidth}px`
-    canvas.style.height = ""
-  } else if (canvas.height >= viewer.clientHeight) {
-    canvas.style.width = ""
-    canvas.style.height = `${viewer.clientHeight}px`
-  } else if (viewer.clientWidth <= 250 / 400 * viewer.clientHeight) {
+  if (viewer.clientWidth <= width / height * viewer.clientHeight) {
     canvas.style.width = "100%"
     canvas.style.height = ""
-  } else if (viewer.clientHeight <= viewer.clientWidth / 250 * 400) {
+  } else if (viewer.clientHeight <= viewer.clientWidth / width * height) {
     canvas.style.width = ""
     canvas.style.height = "100%"
   }

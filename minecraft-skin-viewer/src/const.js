@@ -43,6 +43,7 @@ export const {
 } = window
 
 export const distance = 32 
+export const canvasSize = { width: 500, height: 800 }
 export const configBtns = Array.from(document.querySelectorAll('.configBtn input'))
 export const skinCanvas = document.createElement('canvas')
 export const skinCtx = skinCanvas.getContext('2d')
@@ -54,7 +55,7 @@ export const skinModel = new THREE.Group()
 export const centerPoint = new THREE.Vector3()
 export const texture = new THREE.Texture(skinImg)
 export const scene = new THREE.Scene()
-export const camera = new THREE.PerspectiveCamera(75, 250 / 400, 0.1, 1000)
+export const camera = new THREE.PerspectiveCamera(75, canvasSize.width / canvasSize.height, 0.1, 1000)
 export const renderer = new THREE.WebGLRenderer({ alpha: true, canvas })
 export const defaultSkin = await import.meta.resolve('@/assets/Coffey.png')
 export const importationType = { with: { type: 'json' } }
