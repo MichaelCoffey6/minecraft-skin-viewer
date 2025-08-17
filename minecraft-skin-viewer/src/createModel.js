@@ -1,5 +1,5 @@
 import * as THREE from "./three-js/three.module.min.js"
-import { MODELS, texture } from "./const.js"
+import { MODELS, BONE_NAMES, texture, skinModel } from "./const.js"
 import { pageConfig } from "./saveData.js"
 
 const getMaterial = ({ width, height, uv, isBottom = false }) => {
@@ -21,7 +21,7 @@ const getMaterial = ({ width, height, uv, isBottom = false }) => {
 }
 
 export const setPositionBone = ({ name: boneName, position, rotation }) => {
-  const { skinType } = window.pageConfig.bones
+  const { skinType } = pageConfig.bones
   const { [boneName]: boneModel } = MODELS[skinType]
   const { size, origin } = boneModel
   const [ width, height ] = size
@@ -33,8 +33,8 @@ export const setPositionBone = ({ name: boneName, position, rotation }) => {
   rotation.x = 0
 }
 
-export const getBoneAndStruct = async (boneName, getBone = () => null) => {
-  const { skinType } = (await pageConfig).bones
+export const getBoneAndStruct = (boneName, getBone = () => null) => {
+  const { skinType } = pageConfig.bones
   const { [boneName]: boneModel } = MODELS[skinType]
   const { size, uv, origin, inflate } = boneModel
   const [ width, height, length ] = size
@@ -60,9 +60,22 @@ export const getBoneAndStruct = async (boneName, getBone = () => null) => {
   
   const bone = getBone(geometry, materials)
   bone.name = boneName
-  bone.visible = (await pageConfig).bones[boneName]
+  bone.visible = pageConfig.bones[boneName]
   
   setPositionBone(bone)
 
   return { bone, geometry, materials }
 }
+
+export const MODEL_BONES = Object.fromEntries(
+  BONE_NAMES.map(boneName => {
+    const setBone = (gmtry, mtrls) => new THREE.Mesh(gmtry, mtrls)
+    const { bone } = getBoneAndStruct(boneName, setBone)
+    skinModel.add(bone)
+    return [ boneName, bone ]
+  })
+)
+
+const boxModel = new THREE.Box3().setFromObject(skinModel)
+const modelCenter = boxModel.getCenter(new THREE.Vector3())
+skinModel.position.sub(modelCenter)

@@ -1,5 +1,5 @@
-import { MODELS, MODEL_BONES, ARM_NAMES, selectSkinType, reader, skinImg, loadSkinInp, skinCanvas, skinCtx } from "./const.js"
-import { getBoneAndStruct } from "./createModel.js"
+import { MODELS, ARM_NAMES, selectSkinType, reader, skinImg, loadSkinInp, skinCanvas, skinCtx } from "./const.js"
+import { MODEL_BONES, getBoneAndStruct } from "./createModel.js"
 import { InvalidSkin, setPreview, setSkinSelectorOpts, openInvalidSkin } from "./skinPreview.js"
 import { saveData, pageConfig } from "./saveData.js"
 
@@ -10,26 +10,24 @@ export const loadFile = () => {
 }
 
 export const loadSkin = async skinType => {
-  const notSameSkinType = skinType !== window.pageConfig.bones.skinType
-  window.pageConfig.bones.skinType = skinType
+  const notSameSkinType = skinType !== pageConfig.bones.skinType
+  pageConfig.bones.skinType = skinType
   saveData()
   
-  const bones = Object.entries(MODEL_BONES).map(async ([ boneName, bone ]) => {
+  for (const [ boneName, bone ] of Object.entries(MODEL_BONES)) {
     if (notSameSkinType && ARM_NAMES.includes(boneName)) {
-      const { geometry, materials } = await getBoneAndStruct(boneName, () => bone)
+      const { geometry, materials } = getBoneAndStruct(boneName, () => bone)
       bone.material.forEach(({ map }, i) => Object.assign(map, materials[i].map))
       bone.geometry = geometry
     }
     
     bone.material.forEach(({ map }) => map.dispose())
-  })
-  
-  return Promise.all(bones)
+  }
 }
 
 export const loadImage = async () => {
   const src = reader.result
-  selectSkinType.style.display = "grid"
+  selectSkinType.style.display = ""
   
   try {
     if (!src.startsWith('data:image/png'))
@@ -53,7 +51,7 @@ export const loadImage = async () => {
       setPreview()
       
       const skinType = await setSkinSelectorOpts()
-      window.pageConfig.skinImgSrc = src
+      pageConfig.skinImgSrc = src
       loadSkin(skinType)
     } else await openInvalidSkin('Image size.')
   } catch (err) {
@@ -62,5 +60,5 @@ export const loadImage = async () => {
   }
   
   selectSkinType.classList.remove('invalid')
-  selectSkinType.style.display = ""
+  selectSkinType.style.display = "none"
 }

@@ -23,7 +23,7 @@
 </head>
 <body>
   <div id="app">
-    <article id="selectSkinType" hidden>
+    <article id="selectSkinType" role="dialog">
       <header>
         <h2>SKIN TYPE</h2>
       </header>
@@ -45,11 +45,11 @@
         
         <div id="skinTypesBtns" class="selectSkinBtns">
           <button id="selectSlimSkin" value="slim">
-            <canvas width="32" height="64" id="slimPreview" data-skin-type="slim"></canvas>
+            <canvas width="32" height="64" id="slimPreview"></canvas>
           </button>
           
           <button id="selectClassicSkin" value="classic">
-            <canvas width="32" height="64" id="classicPreview" data-skin-type="classic"></canvas>
+            <canvas width="32" height="64" id="classicPreview"></canvas>
           </button>
         </div>
       </div>
@@ -66,17 +66,17 @@
       
       <section id="config">
         <article id="loadSkinBtn" class="configBtn">
-          <input id="loadSkinInp" name="skinPartsChk" type="file" accept="image/*" hidden />
+          <input id="loadSkinInp" type="file" accept="image/*" hidden />
           <label for="loadSkinInp">Load Skin</label>
         </article>
         
         <article id="bodyPartsBtn" class="configBtn">
-          <input id="bodyPartsChk" name="skinPartsChk" type="radio" checked hidden />
+          <input id="bodyPartsChk" name="skinPartsChk" type="checkbox" checked hidden />
           <label for="bodyPartsChk">Body Parts</label>
         </article>
         
         <article id="clotesPartsBtn" class="configBtn">
-          <input id="clotesPartsChk" name="skinPartsChk" type="radio" hidden />
+          <input id="clotesPartsChk" name="skinPartsChk" type="checkbox" hidden />
           <label for="clotesPartsChk">Clotes Parts</label>
         </article>
         
@@ -90,7 +90,7 @@
           <label for="audioChk">Audio: </label>
         </article>
         
-        <article id="skinPartsBtn" class="configBtn">
+        <article id="skinPartsBtns" class="configBtn">
           <svg id="skinParts" viewbox="-0.5 -0.5 37 69" xmlns="http://www.w3.org/2000/svg">
             <path id="headPath" d="M12,3 24,3 24,15 12,15z" />
             <path id="bodyPath" d="M12,21 24,21 24,40 12,40z" />
@@ -105,28 +105,6 @@
             <path id="leftSleevePath" class="clotes" data-body-part="leftArmPath" d="M28,19 35,19 35,42 28,42z" />
             <path id="rightPantsPath" class="clotes" data-body-part="rightLegPath" d="M10,44 17,44 17,67 10,67z" />
             <path id="leftPantsPath" class="clotes" data-body-part="leftLegPath" d="M19,44 26,44 26,67 19,67z" />
-            
-            <style>
-              @scope {
-                path {
-                  stroke: #555;
-                  fill: #555;
-                }
-                
-                .clotes {
-                  fill: transparent;
-                }
-                
-                path.invisible:not(.clotes) {
-                  stroke: #aaa;
-                  fill: #aaa
-                }
-                
-                path.invisible.clotes {
-                  stroke: #aaa;
-                }
-              }
-            </style>
           </svg>
         </article>
       </section>

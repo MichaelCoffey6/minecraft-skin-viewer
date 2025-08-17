@@ -1,21 +1,29 @@
 import { TACTIL_STATE, camera, centerPoint, distance } from "./const.js"
 
-export const onPointerDown = ({ pointerType, clientX, clientY }) => {
-  TACTIL_STATE.pointerType = pointerType
-  TACTIL_STATE.touchStartX = clientX
-  TACTIL_STATE.touchStartY = clientY
+const POINTER_TYPES = {
+  mouse: 'mouse',
+  touch: 'touch'
 }
 
-export const onTouchMove = ({ touches }) => {
-  const { pointerType, touchStartX, touchStartY } = TACTIL_STATE
+export const onPointerDown = ({ pointerType, clientX, clientY }) => {
+  TACTIL_STATE.pointerType = pointerType === POINTER_TYPES.touch ? TouchEvent : MouseEvent
+  TACTIL_STATE.pointerStartX = clientX
+  TACTIL_STATE.pointerStartY = clientY
+  TACTIL_STATE.pointerDown = true
+}
+
+export const onPointerMove = event => {
+  const { touches, constructor } = event
+  const { pointerStartX, pointerStartY, pointerType, pointerDown } = TACTIL_STATE
   
-  if (pointerType !== 'touch') return
+  if (pointerType !== constructor || !pointerDown) return
   
-  const [ touch ] = touches
-  const touchX = touch.clientX
-  const touchY = touch.clientY
-  const deltaX = touchX - touchStartX
-  const deltaY = touchY - touchStartY
+  const { clientX, clientY } = pointerType === TouchEvent 
+    ? touches[0]
+    : event
+  
+  const deltaX = clientX - pointerStartX
+  const deltaY = clientY - pointerStartY
   const cameraRotationX = TACTIL_STATE.cameraRotationX += deltaX * 0.01
   const cameraRotationY = TACTIL_STATE.cameraRotationY += deltaY * 0.01
   const angle = cameraRotationX
@@ -30,15 +38,17 @@ export const onTouchMove = ({ touches }) => {
   
   camera.lookAt(centerPoint)
   
-  TACTIL_STATE.touchStartX = touchX
-  TACTIL_STATE.touchStartY = touchY
+  TACTIL_STATE.pointerStartX = clientX
+  TACTIL_STATE.pointerStartY = clientY
 }
 
-export const onTouchEnd = () => {
-  const { pointerType } = TACTIL_STATE
+export const onPointerUp = event => {
+  const { constructor } = event
+  const { pointerType, pointerDown } = TACTIL_STATE
   
-  if (pointerType !== 'touch') return
+  if (pointerType !== constructor || !pointerDown) return
   
-  TACTIL_STATE.touchStartX = 0
-  TACTIL_STATE.touchStartY = 0
+  TACTIL_STATE.pointerStartX = 0
+  TACTIL_STATE.pointerStartY = 0
+  TACTIL_STATE.pointerDown = false
 }

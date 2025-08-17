@@ -1,13 +1,13 @@
 import * as THREE from "./three-js/three.module.min.js"
-import { getJSON, variablesLoaded } from "./utils.js"
-import { getBoneAndStruct } from "./createModel.js"
+import { getJSON } from "./utils.js"
 
 export const TACTIL_STATE = {
   touchStartX: 0, 
   touchStartY: 0,
   cameraRotationX: 0,
   cameraRotationY: 0,
-  pointerType: 'mouse'
+  pointerDown: false,
+  pointerType: TouchEvent
 }
 
 export const ARM_NAMES = [
@@ -60,20 +60,3 @@ export const renderer = new THREE.WebGLRenderer({ alpha: true, canvas })
 export const defaultSkin = await import.meta.resolve('@/assets/Coffey.png')
 export const importationType = { with: { type: 'json' } }
 export const MODELS = await getJSON('@/src/geometry.json')
-
-variablesLoaded()
-
-export const MODEL_BONES = Object.fromEntries(
-  await Promise.all(
-    BONE_NAMES.map(async boneName => {
-      const setBone = (gmtry, mtrls) => new THREE.Mesh(gmtry, mtrls)
-      const { bone } = await getBoneAndStruct(boneName, setBone)
-      skinModel.add(bone)
-      return [boneName, bone]
-    })
-  )
-)
-
-const boxModel = new THREE.Box3().setFromObject(skinModel)
-const modelCenter = boxModel.getCenter(new THREE.Vector3())
-skinModel.position.sub(modelCenter)

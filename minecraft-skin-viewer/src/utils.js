@@ -1,10 +1,5 @@
 import { BONE_NAMES, importationType, audioChk } from "./const.js"
 
-export const {
-  promise: loadVariables,
-  resolve: variablesLoaded
-} = Promise.withResolvers()
-
 const getModelsGeometries = json => {
   const { 'minecraft:geometry': [ , classic, slim ] } = json
   const classicBones = {}

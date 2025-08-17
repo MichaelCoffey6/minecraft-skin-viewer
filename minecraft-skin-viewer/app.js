@@ -1,8 +1,8 @@
 import { SRGBColorSpace } from "./src/three-js/three.module.min.js"
 import { MODELS, canvasSize, app, defaultSkin, titleImg, camera, renderer, scene, skinModel, canvas, skinParts, viewer, config, distance, skinImg, loadSkinInp, reader } from "./src/const.js"
 import { loadFile, loadImage, loadSkin } from "./src/loadSkinFile.js"
-import { onPointerDown, onTouchMove, onTouchEnd } from "./src/tactilRotation.js"
-import { onConfigBtnClick, onSkinPartClick, configBtnFocus } from "./src/onBtnClick.js"
+import { onPointerDown, onPointerMove, onPointerUp } from "./src/tactilRotation.js"
+import { onConfigBtnClick, onSkinPartChkClick, onSkinPartClick, configBtnFocus } from "./src/onBtnClick.js"
 import { pageConfig } from "./src/saveData.js"
 import { animate } from "./src/animation.js"
 
@@ -10,7 +10,7 @@ const {
   bones: { skinType, ...bones }, 
   skinImgSrc, 
   ...configBtns 
-} = await pageConfig
+} = pageConfig
 
 const { width, height } = canvasSize
 
@@ -46,12 +46,16 @@ await Promise.all([
 ])
 
 onWindowResize()
+selectSkinType.style.display = "none"
 app.style.opacity = 1
 
 window.addEventListener('resize', onWindowResize, false)
+window.addEventListener('touchend', onPointerUp)
+window.addEventListener('mouseup', onPointerUp)
 viewer.addEventListener('pointerdown', onPointerDown)
-viewer.addEventListener('touchmove', onTouchMove)
-viewer.addEventListener('touchend', onTouchEnd)
+viewer.addEventListener('touchmove', onPointerMove)
+viewer.addEventListener('mousemove', onPointerMove)
+config.addEventListener('click', onSkinPartChkClick)
 config.addEventListener('change', onConfigBtnClick)
 reader.addEventListener('load', loadImage)
 loadSkinInp.addEventListener('click', configBtnFocus)

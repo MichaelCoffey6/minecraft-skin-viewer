@@ -1,5 +1,5 @@
-import { MODEL_BONES, renderer, scene, camera, animationChk } from "./const.js"
-import { setPositionBone } from "./createModel.js"
+import { renderer, scene, camera, animationChk } from "./const.js"
+import { MODEL_BONES, setPositionBone } from "./createModel.js"
 
 let positionChanged = true
 let alpha = 0

@@ -1,6 +1,7 @@
 import http from "node:http"
 import fs from "node:fs/promises"
 import path from "node:path"
+import os from "node:os"
 
 const contentTypes = {
   html: "text/html",
@@ -30,7 +31,7 @@ const requestListener = async (req, res) => {
   } catch (err) {
     if (err.code === 'ENOENT') {
       res.writeHead(404)
-      res.end(`404 Not Found ${JSON.stringify(err)}`)
+      res.end(`404 Not Found`)
     } else {
       res.writeHead(500)
       res.end('Error interno del servidor')
@@ -38,9 +39,10 @@ const requestListener = async (req, res) => {
   }
 }
 
-const port = process.env.PORT ?? 4000 
+const port = process.env.PORT ?? 1234 
+const hostname = os.hostname()
 const server = http.createServer(requestListener)
 
 server.listen(port, () => {
-  console.log(`Servidor escuchando en el puerto ${port}`)
+  console.log(`Servidor escuchando en http://${hostname}:${port}`)
 })

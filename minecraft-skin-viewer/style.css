@@ -108,11 +108,11 @@ main {
   grid-template-rows: repeat(5, auto) 1fr;
   grid-template-areas: 
     'loadSkinBtn loadSkinBtn' 
-    'bodyPartsBtn skinPartsBtn'
-    'clotesPartsBtn skinPartsBtn'
-    'animationBtn skinPartsBtn'
-    'audioBtn skinPartsBtn'
-    '. skinPartsBtn'
+    'bodyPartsBtn skinPartsBtns'
+    'clotesPartsBtn skinPartsBtns'
+    'animationBtn skinPartsBtns'
+    'audioBtn skinPartsBtns'
+    '. skinPartsBtns'
 }
 
 #loadSkinBtn {
@@ -127,8 +127,8 @@ main {
   grid-area: clotesPartsBtn;
 }
 
-#skinPartsBtn {
-  grid-area: skinPartsBtn;
+#skinPartsBtns {
+  grid-area: skinPartsBtns;
   width: 100%;
   height: 100%;
   max-height: 100%;
@@ -145,6 +145,24 @@ main {
 
 #audioBtn {
   grid-area: audioBtn;
+}
+
+#skinPartsBtns path {
+  stroke: #555;
+  fill: #555;
+}
+
+#skinPartsBtns .clotes {
+  fill: transparent;
+}
+
+#skinPartsBtns path.invisible:not(.clotes) {
+  stroke: #aaa;
+  fill: #aaa
+}
+
+#skinPartsBtns path.invisible.clotes {
+  stroke: #aaa;
 }
 
 #loadSkinBtn button {
@@ -210,7 +228,7 @@ input[name="skinPartsChk"]:checked + label {
   border-right: 4px solid #555;
   border-bottom: 4px solid #555;
   border-radius: 4px;
-  display: none;
+  display: grid;
   gap: 5px;
   grid-template-areas: 'selectSkinTypeHeader' 'skinTypesCont';
 }
@@ -315,6 +333,6 @@ input[name="skinPartsChk"]:checked + label {
       'bodyPartsBtn clotesPartsBtn'
       'animationBtn animationBtn'
       'audioBtn audioBtn'
-      'skinPartsBtn skinPartsBtn'
+      'skinPartsBtns skinPartsBtns'
   }
 }

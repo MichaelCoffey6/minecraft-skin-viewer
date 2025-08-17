@@ -14,7 +14,7 @@ export const setPreview = () => {
   sizeMutiply = skinCanvas.width === 128 ? 2 : 1
   
   for (const preview of [ classicPreview, slimPreview ]) {
-    const { skinType } = preview.dataset
+    const { value: skinType } = preview.parentElement
     const { leftArm, body } = MODELS[skinType]
     const previewCtx = preview.getContext('2d')
     const previewWidth = preview.width = ((leftArm.size[0] * 2) + body.size[0]) * sizeMutiply
@@ -77,7 +77,7 @@ export const setSkinSelectorOpts = invalidSkinMsg => {
   return promise
 }
 
-export const openInvalidSkin = async invalidSkinMsg => {
+export const openInvalidSkin = invalidSkinMsg => {
   selectSkinType.classList.add('invalid')
-  await setSkinSelectorOpts(invalidSkinMsg)
+  return setSkinSelectorOpts(invalidSkinMsg)
 }

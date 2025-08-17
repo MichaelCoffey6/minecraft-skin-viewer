@@ -1,6 +1,9 @@
-import { MODEL_BONES, configBtns, bodyPartsChk, clotesPartsChk, loadSkinInp } from "./const.js"
+import { configBtns, bodyPartsChk, clotesPartsChk, loadSkinInp } from "./const.js"
 import { playClickAudio } from "./utils.js"
-import { saveData } from "./saveData.js"
+import { saveData, pageConfig } from "./saveData.js"
+import { MODEL_BONES } from "./createModel.js"
+
+const skinPartsChks = Array.from(document.getElementsByName('skinPartsChk'))
 
 export const configBtnFocus = ({ target }) => {
   const label = document.querySelector(`label[for="${target.id}"]`)
@@ -9,13 +12,22 @@ export const configBtnFocus = ({ target }) => {
   playClickAudio()
 }
 
+export const onSkinPartChkClick = ({ target }) => {
+  if (!target.closest('.configBtn label')) return
+  
+  const input = document.getElementById(target.htmlFor)
+  const newIndex = Math.abs(skinPartsChks.indexOf(input) - 1)
+  cl(newIndex, skinPartsChks)
+  skinPartsChks[newIndex]?.click()
+}
+
 export const onConfigBtnClick = ({ target }) => {
   if (!target.closest('.configBtn input')) return
   if (target === loadSkinInp) return
   
   configBtns.forEach(({ type, id, checked }) => {
     if (type !== loadSkinInp.type) {
-      window.pageConfig[id] = checked
+      pageConfig[id] = checked
     }
   })
   
@@ -40,7 +52,7 @@ export const onSkinPartClick = async ({ target }) => {
   }
   
   target.classList[classListAction]('invisible')
-  window.pageConfig.bones[partName] = !target.classList.contains('invisible')
+  pageConfig.bones[partName] = !target.classList.contains('invisible')
   MODEL_BONES[partName].visible = isInvisible
   playClickAudio()
   saveData()
