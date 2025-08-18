@@ -1,33 +1,10 @@
 import { SRGBColorSpace } from "./src/three-js/three.module.min.js"
-import { MODELS, canvasSize, app, defaultSkin, titleImg, camera, renderer, scene, skinModel, canvas, skinParts, viewer, config, distance, skinImg, loadSkinInp, reader } from "./src/const.js"
+import { canvasSize, app, defaultSkin, titleImg, camera, renderer, scene, skinModel, centerPoint, canvas, skinParts, viewer, config, distance, skinImg, loadSkinInp, reader } from "./src/const.js"
 import { loadFile, loadImage, loadSkin } from "./src/loadSkinFile.js"
 import { onPointerDown, onPointerMove, onPointerUp } from "./src/tactilRotation.js"
 import { onConfigBtnClick, onSkinPartChkClick, onSkinPartClick, configBtnFocus } from "./src/onBtnClick.js"
 import { pageConfig } from "./src/saveData.js"
 import { animate } from "./src/animation.js"
-
-const { 
-  bones: { skinType, ...bones }, 
-  skinImgSrc, 
-  ...configBtns 
-} = pageConfig
-
-const { width, height } = canvasSize
-
-skinImg.src = skinImgSrc || defaultSkin
-camera.position.z = distance
-renderer.outputColorSpace = SRGBColorSpace
-renderer.setSize(width, height)
-scene.add(skinModel)
-
-for (const [boneName, visible] of Object.entries(bones)) {
-  if (boneName === 'skinType') continue
-  window[`${boneName}Path`]?.classList[visible ? 'remove' : 'add']('invisible')
-}
-
-for (const [configBtnId, checked] of Object.entries(configBtns)) {
-  Object.assign(window[configBtnId] ?? {}, { checked })
-}
 
 const onWindowResize = () => {
   if (viewer.clientWidth <= width / height * viewer.clientHeight) {
@@ -39,15 +16,57 @@ const onWindowResize = () => {
   }
 }
 
-await Promise.all([
-  document.fonts.ready,
-  titleImg.decode(),
-  skinImg.decode()
-])
+const appearPage = () => {
+  onWindowResize()
+  selectSkinType.style.display = "none"
+  app.style.opacity = 1
+}
 
-onWindowResize()
-selectSkinType.style.display = "none"
-app.style.opacity = 1
+const initPage = async () => {
+  const { 
+    bones, 
+    camera: cameraPositions,
+    skinType,
+    skinImgSrc,
+    ...configBtns
+  } = pageConfig
+  
+  if (cameraPositions) {
+    const { x, y, z } = cameraPositions
+    camera.position.x = x
+    camera.position.y = y
+    camera.position.z = z
+    camera.lookAt(centerPoint)
+  }
+  
+  skinImg.src = skinImgSrc || defaultSkin
+  
+  for (const [ boneName, visible ] of Object.entries(bones)) {
+    window[`${boneName}Path`]?.classList[visible ? 'remove' : 'add']('invisible')
+  }
+  
+  for (const [ configBtnId, checked ] of Object.entries(configBtns)) {
+    Object.assign(window[configBtnId] ?? {}, { checked })
+  }
+  
+  const initPageTimeout = setTimeout(appearPage, 3000)
+  
+  await Promise.all([
+    document.fonts.ready,
+    titleImg.decode(),
+    skinImg.decode()
+  ])
+  
+  clearTimeout(initPageTimeout)
+  appearPage()
+  loadSkin(skinType).then(animate)
+}
+
+const { width, height } = canvasSize
+camera.position.z = distance
+renderer.outputColorSpace = SRGBColorSpace
+renderer.setSize(width, height)
+scene.add(skinModel)
 
 window.addEventListener('resize', onWindowResize, false)
 window.addEventListener('touchend', onPointerUp)
@@ -62,4 +81,4 @@ loadSkinInp.addEventListener('click', configBtnFocus)
 loadSkinInp.addEventListener('change', loadFile)
 skinParts.addEventListener('click', onSkinPartClick)
 
-loadSkin(skinType).then(animate)
+initPage()

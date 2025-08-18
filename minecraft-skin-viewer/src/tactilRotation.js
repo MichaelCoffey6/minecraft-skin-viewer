@@ -1,4 +1,5 @@
 import { TACTIL_STATE, camera, centerPoint, distance } from "./const.js"
+import { pageConfig, saveData } from "./saveData.js"
 
 const POINTER_TYPES = {
   mouse: 'mouse',
@@ -51,4 +52,8 @@ export const onPointerUp = event => {
   TACTIL_STATE.pointerStartX = 0
   TACTIL_STATE.pointerStartY = 0
   TACTIL_STATE.pointerDown = false
+  
+  const { x, y, z } = camera.position
+  pageConfig.camera = { x, y, z }
+  saveData()
 }

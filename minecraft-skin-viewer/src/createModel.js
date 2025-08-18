@@ -21,7 +21,7 @@ const getMaterial = ({ width, height, uv, isBottom = false }) => {
 }
 
 export const setPositionBone = ({ name: boneName, position, rotation }) => {
-  const { skinType } = pageConfig.bones
+  const { skinType } = pageConfig
   const { [boneName]: boneModel } = MODELS[skinType]
   const { size, origin } = boneModel
   const [ width, height ] = size
@@ -34,7 +34,7 @@ export const setPositionBone = ({ name: boneName, position, rotation }) => {
 }
 
 export const getBoneAndStruct = (boneName, getBone = () => null) => {
-  const { skinType } = pageConfig.bones
+  const { skinType } = pageConfig
   const { [boneName]: boneModel } = MODELS[skinType]
   const { size, uv, origin, inflate } = boneModel
   const [ width, height, length ] = size
