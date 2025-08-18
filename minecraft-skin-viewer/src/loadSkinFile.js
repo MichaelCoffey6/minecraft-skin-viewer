@@ -10,8 +10,8 @@ export const loadFile = () => {
 }
 
 export const loadSkin = async skinType => {
-  const notSameSkinType = skinType !== pageConfig.bones.skinType
-  pageConfig.bones.skinType = skinType
+  const notSameSkinType = skinType !== pageConfig.skinType
+  pageConfig.skinType = skinType
   saveData()
   
   for (const [ boneName, bone ] of Object.entries(MODEL_BONES)) {
