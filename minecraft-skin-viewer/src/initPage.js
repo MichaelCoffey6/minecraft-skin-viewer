@@ -38,11 +38,14 @@ export const initPage = () => {
   }
   
   for (const [ boneName, visible ] of Object.entries(bones)) {
-    window[`${boneName}Path`]?.classList[visible ? 'remove' : 'add']('invisible')
+    const classListAction = visible ? "remove" : "add"
+    const bonePath = window[`${boneName}Path`]
+    bonePath?.classList[classListAction]('invisible')
   }
   
   for (const [ configBtnId, checked ] of Object.entries(configBtns)) {
-    Object.assign(window[configBtnId] ?? {}, { checked })
+    const configBtn = window[`${configBtnId}Path`]
+    Object.assign(configBtn ?? {}, { checked })
   }
   
   const appearPage = () => {
