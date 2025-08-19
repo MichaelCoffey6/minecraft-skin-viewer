@@ -1,22 +1,23 @@
 import { BONE_NAMES, importationType, audioChk } from "./const.js"
 
+export const $$ = sel => Array.from(document.querySelectorAll(sel))
+
 const getModelsGeometries = json => {
-  const { 'minecraft:geometry': [ , classic, slim ] } = json
-  const classicBones = {}
-  const slimBones = {}
+  const { 'minecraft:geometry': [ , classicBones, slimBones ] } = json
+  const geometriesEntries = [
+    [ 'classic', {} ],
+    [ 'slim', {} ]
+  ]
   
-  classic.bones.forEach(({ name, cubes: [ boneInfo ] = [ null ] }) => {
-    if (BONE_NAMES.includes(name)) classicBones[name] = boneInfo
+  Array(classicBones, slimBones).forEach(({ bones }, i) => {
+    bones.forEach(({ name, cubes: [ boneInfo ] = [ null ] }) => {
+      if (BONE_NAMES.includes(name)) {
+        geometriesEntries[i][1][name] = boneInfo
+      }
+    })
   })
   
-  slim.bones.forEach(({ name, cubes: [ boneInfo ] = [ null ] }) => {
-    if (BONE_NAMES.includes(name)) slimBones[name] = boneInfo
-  })
-  
-  return {
-    classic: classicBones,
-    slim: slimBones,
-  }
+  return Object.fromEntries(geometriesEntries)
 }
 
 export const getJSON = async url => {

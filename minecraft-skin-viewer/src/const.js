@@ -1,5 +1,5 @@
 import * as THREE from "./three-js/three.module.min.js"
-import { getJSON } from "./utils.js"
+import { $$, getJSON } from "./utils.js"
 
 export const TACTIL_STATE = {
   touchStartX: 0, 
@@ -44,7 +44,8 @@ export const {
 
 export const distance = 32 
 export const canvasSize = { width: 500, height: 800 }
-export const configBtns = Array.from(document.querySelectorAll('.configBtn input'))
+export const configBtns = $$('.configBtn input:not(#loadSkinInp)')
+export const skinPartsSelChks = $$('[name=skinPartsChk]')
 export const skinCanvas = document.createElement('canvas')
 export const skinCtx = skinCanvas.getContext('2d')
 export const frontSkinCanvas = document.createElement('canvas')

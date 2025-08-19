@@ -9,7 +9,7 @@ export const loadFile = () => {
   loadSkinInp.value = ""
 }
 
-export const loadSkin = async skinType => {
+export const loadSkin = skinType => {
   const notSameSkinType = skinType !== pageConfig.skinType
   pageConfig.skinType = skinType
   saveData()
