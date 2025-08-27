@@ -44,7 +44,7 @@ export const initPage = () => {
   }
   
   for (const [ configBtnId, checked ] of Object.entries(configBtns)) {
-    const configBtn = window[`${configBtnId}Path`]
+    const configBtn = window[configBtnId]
     Object.assign(configBtn ?? {}, { checked })
   }
   
